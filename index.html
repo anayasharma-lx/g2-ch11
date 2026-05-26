@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 11 · Time</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--sky:#87CEEB;--sky2:#4BA3D4;--sun:#FFD93D;--cloud:#FFFFFF;--blue:#1A6FA8;--dusk:#F8A500;--night:#1B2A4A;--cream:#FFFEF5;--green:#2D9E44}
+html,body{width:100%;min-height:100vh}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(180deg,#B8E8FF 0%,#74C0FC 35%,#E0F5FF 70%,#FFFEF5 100%);min-height:100vh;padding:0 0 32px;display:flex;flex-direction:column;align-items:center;}
+
+.sky-header{width:100%;background:linear-gradient(180deg,#1A6FA8,#4BA3D4);padding:16px 20px 26px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.cloud-stripe{position:absolute;bottom:0;left:0;right:0;height:20px;background:rgba(255,255,255,.3);clip-path:polygon(0 100%,0 50%,3% 10%,6% 50%,9% 10%,12% 50%,15% 10%,18% 50%,21% 10%,24% 50%,27% 10%,30% 50%,33% 10%,36% 50%,39% 10%,42% 50%,45% 10%,48% 50%,51% 10%,54% 50%,57% 10%,60% 50%,63% 10%,66% 50%,69% 10%,72% 50%,75% 10%,78% 50%,81% 10%,84% 50%,87% 10%,90% 50%,93% 10%,96% 50%,99% 10%,100% 50%,100% 100%)}
+.sh-title{font-family:'Fredoka One',cursive;font-size:26px;color:#fff;z-index:1;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+.sh-chip{background:var(--sun);color:#3A2A00;font-size:12px;font-weight:900;padding:5px 14px;border-radius:20px;z-index:1;border:2px solid rgba(255,255,255,.3)}
+
+.page{width:100%;max-width:700px;padding:16px;display:flex;flex-direction:column;gap:20px}
+.scard{background:var(--cream);border-radius:24px;padding:20px;box-shadow:0 6px 0 rgba(0,0,0,.12),0 2px 20px rgba(0,0,0,.08);border:3px solid rgba(255,255,255,.9);position:relative;overflow:hidden}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;border-radius:24px 24px 0 0}
+.scard.sky::before{background:var(--sky2)}.scard.sun::before{background:var(--sun)}.scard.green::before{background:var(--green)}
+.sc-title{font-family:'Fredoka One',cursive;font-size:20px;color:var(--blue);margin-bottom:4px}
+.hint{font-size:13px;font-weight:700;color:var(--sky2);margin-bottom:14px;line-height:1.5}
+
+/* clock layout */
+.clock-layout{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap}
+.clock-controls{display:flex;flex-direction:column;gap:10px;min-width:180px}
+.ctrl-grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cg-lbl{font-family:'Fredoka One',cursive;font-size:14px;min-width:50px}
+.cg-lbl.h{color:var(--blue)}.cg-lbl.m{color:#7C3AED}
+.sbtn{width:36px;height:36px;border-radius:50%;border:none;font-size:16px;font-weight:900;cursor:pointer;color:#fff;transition:transform .1s;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.sbtn:active{transform:scale(.88)}
+.sbtn.h{background:var(--blue)}.sbtn.m{background:#7C3AED}
+.cg-val{font-family:'Fredoka One',cursive;font-size:24px;min-width:36px;text-align:center}
+.cg-val.h{color:var(--blue)}.cg-val.m{color:#7C3AED}
+.digital-clock{font-family:'Fredoka One',cursive;font-size:52px;color:var(--blue);letter-spacing:3px;margin-top:4px;text-shadow:0 2px 0 rgba(0,0,0,.08)}
+.time-words{font-family:'Fredoka One',cursive;font-size:17px;color:var(--sky2);margin-top:2px}
+.hand-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--blue)}
+.leg-swatch{width:24px;height:4px;border-radius:2px}
+
+/* schedule */
+.sched-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1.5px solid #E0F0FF;cursor:pointer;border-radius:8px;transition:all .15s}
+.sched-row:hover{background:#EFF8FF}
+.sched-row.active{background:#DBEAFE}
+.sched-row:last-child{border-bottom:none}
+.sched-em{font-size:22px}
+.sched-act{font-size:14px;font-weight:800;color:var(--blue);flex:1}
+.sched-time{font-family:'Fredoka One',cursive;font-size:16px;color:var(--sky2);min-width:52px;text-align:right}
+
+/* quiz */
+.qc-wrap{display:flex;justify-content:center;margin:10px 0 14px}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.opt{font-family:'Fredoka One',cursive;font-size:16px;min-width:80px;height:52px;border-radius:14px;border:3px solid #BAE6FD;background:#fff;cursor:pointer;color:var(--blue);transition:all .14s;padding:0 10px;box-shadow:0 3px 0 rgba(0,0,0,.08)}
+.opt:hover{border-color:var(--blue);transform:scale(1.06);background:#EFF8FF}
+.opt.correct{background:#DBEAFE;border-color:var(--blue)}
+.opt.wrong{background:#FFE0E0;border-color:#FF6B6B;color:#C92A2A}
+.quiz-fb{font-family:'Fredoka One',cursive;font-size:17px;min-height:22px;margin-top:10px}
+.next-btn{margin-top:12px;background:linear-gradient(135deg,var(--blue),#0A4A7A);color:#fff;border:none;border-radius:16px;padding:12px 28px;font-family:'Fredoka One',cursive;font-size:17px;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12);transition:all .18s}
+.next-btn:hover{transform:scale(1.06)}
+</style>
+</head>
+<body>
+<div class="sky-header">
+  <div class="cloud-stripe"></div>
+  <div class="sh-title">⏰ Time</div>
+  <div class="sh-chip">Chapter 11</div>
+</div>
+<div class="page">
+
+  <div class="scard sky">
+    <div class="sc-title">🕐 Set the clock!</div>
+    <div class="hint">Press + and − to move the blue hour hand and purple minute hand. Try setting the clock to 6:30 or 9:15!</div>
+    <div class="clock-layout">
+      <canvas id="mainClock" width="210" height="210"></canvas>
+      <div class="clock-controls">
+        <div class="ctrl-grp">
+          <span class="cg-lbl h">Hours</span>
+          <button class="sbtn h" onclick="chClock('h',-1)">−</button>
+          <span class="cg-val h" id="hv">3</span>
+          <button class="sbtn h" onclick="chClock('h',1)">+</button>
+        </div>
+        <div class="ctrl-grp">
+          <span class="cg-lbl m">Mins</span>
+          <button class="sbtn m" onclick="chClock('m',-5)">−5</button>
+          <span class="cg-val m" id="mv">00</span>
+          <button class="sbtn m" onclick="chClock('m',5)">+5</button>
+        </div>
+        <div class="digital-clock" id="digital">3:00</div>
+        <div class="time-words" id="timeWords">Three o'clock</div>
+        <div class="hand-legend">
+          <div class="leg-item"><div class="leg-swatch" style="background:var(--blue)"></div>Hours</div>
+          <div class="leg-item"><div class="leg-swatch" style="background:#7C3AED"></div>Minutes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scard sun">
+    <div class="sc-title">🌞 A child's day — tap to set the clock!</div>
+    <div class="hint">Tap any activity below. The clock will jump to that time! Notice how the hands move to different positions.</div>
+    <div id="schedList"></div>
+  </div>
+
+  <div class="scard green">
+    <div class="sc-title">🔍 What time does this clock show?</div>
+    <div class="hint">Look at the short blue hand (hours) and the long purple hand (minutes). Pick the right time!</div>
+    <div class="qc-wrap"><canvas id="quizClock" width="170" height="170"></canvas></div>
+    <div class="opts" id="qOpts"></div>
+    <div class="quiz-fb" id="qFb"></div>
+    <button class="next-btn" onclick="newQuiz()">New time ➡️</button>
+  </div>
+
+</div>
+<script>
+let cH=3,cM=0;
+const H_WORDS=['twelve','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
+function toWords(h,m){
+  const hn=H_WORDS[h%12];const hn2=H_WORDS[(h%12+1)>12?1:h%12+1];
+  if(m===0)return(hn.charAt(0).toUpperCase()+hn.slice(1))+' o\'clock';
+  if(m===30)return'Half past '+hn;
+  if(m===15)return'Quarter past '+hn;
+  if(m===45)return'Quarter to '+hn2;
+  if(m<30)return m+' past '+hn;
+  return(60-m)+' to '+hn2;
+}
+function drawClock(id,h,m,r){
+  const cvs=document.getElementById(id);if(!cvs)return;
+  const ctx=cvs.getContext('2d');const cx=cvs.width/2,cy=cvs.height/2;
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  // gradient face
+  const grad=ctx.createRadialGradient(cx-r*.1,cy-r*.1,r*.2,cx,cy,r);
+  grad.addColorStop(0,'#FFFEF5');grad.addColorStop(1,'#E8F4FF');
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+  ctx.strokeStyle=var_blue;ctx.lineWidth=3;ctx.stroke();
+  // ticks
+  for(let i=0;i<60;i++){const ang=(i/60)*Math.PI*2-Math.PI/2;const maj=i%5===0;
+    ctx.strokeStyle=maj?var_blue:'#BAE6FD';ctx.lineWidth=maj?2:1.5;
+    ctx.beginPath();ctx.moveTo(cx+Math.cos(ang)*(r-2),cy+Math.sin(ang)*(r-2));
+    ctx.lineTo(cx+Math.cos(ang)*(maj?r-13:r-8),cy+Math.sin(ang)*(maj?r-13:r-8));ctx.stroke();}
+  // numbers
+  const nr=r-22;ctx.fillStyle=var_blue;ctx.font=`bold ${Math.round(r*.17)}px Fredoka One,cursive`;ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let n=1;n<=12;n++){const ang=(n/12)*Math.PI*2-Math.PI/2;ctx.fillText(n,cx+Math.cos(ang)*nr,cy+Math.sin(ang)*nr);}
+  // minute hand
+  const mAng=(m/60)*Math.PI*2-Math.PI/2;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(mAng)*(r-8),cy+Math.sin(mAng)*(r-8));
+  ctx.strokeStyle='#7C3AED';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();
+  // hour hand
+  const hAng=((h%12+m/60)/12)*Math.PI*2-Math.PI/2;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(hAng)*(r-26),cy+Math.sin(hAng)*(r-26));
+  ctx.strokeStyle=var_blue;ctx.lineWidth=5;ctx.lineCap='round';ctx.stroke();
+  // center dot
+  ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fillStyle='#1B2A4A';ctx.fill();
+}
+const var_blue='#1A6FA8';
+function chClock(d,v){
+  if(d==='h')cH=(((cH-1+v)%12+12)%12)+1;else cM=(cM+v+60)%60;
+  document.getElementById('hv').textContent=cH;document.getElementById('mv').textContent=String(cM).padStart(2,'0');
+  document.getElementById('digital').textContent=cH+':'+String(cM).padStart(2,'0');
+  document.getElementById('timeWords').textContent=toWords(cH,cM);
+  drawClock('mainClock',cH,cM,100);
+}
+chClock('h',0);
+
+/* Schedule */
+const SCHED=[
+  {em:'🌅',act:'Wake up',h:7,m:0},{em:'🏫',act:'School starts',h:8,m:30},
+  {em:'🍎',act:'Morning break',h:10,m:0},{em:'🍱',act:'Lunch time',h:12,m:30},
+  {em:'🏠',act:'School ends',h:3,m:0},{em:'📚',act:'Homework',h:4,m:0},
+  {em:'⚽',act:'Play time',h:5,m:30},{em:'🍛',act:'Dinner',h:7,m:30},{em:'🌙',act:'Bedtime',h:9,m:0},
+];
+let activeRow=-1;
+function buildSched(){
+  const list=document.getElementById('schedList');list.innerHTML='';
+  SCHED.forEach((s,i)=>{
+    const row=document.createElement('div');row.className='sched-row';if(i===activeRow)row.classList.add('active');
+    row.innerHTML=`<span class="sched-em">${s.em}</span><span class="sched-act">${s.act}</span><span class="sched-time">${s.h}:${String(s.m).padStart(2,'0')}</span>`;
+    row.onclick=()=>{activeRow=i;cH=s.h;cM=s.m;chClock('h',0);document.getElementById('hv').textContent=s.h;document.getElementById('mv').textContent=String(s.m).padStart(2,'0');buildSched();};
+    list.appendChild(row);
+  });
+}
+buildSched();
+
+/* Quiz */
+const Q_TIMES=[{h:1,m:0},{h:2,m:30},{h:3,m:0},{h:4,m:15},{h:5,m:45},{h:6,m:0},{h:7,m:30},{h:8,m:0},{h:9,m:15},{h:10,m:30},{h:11,m:0},{h:12,m:0},{h:3,m:30},{h:6,m:45},{h:2,m:0},{h:4,m:30}];
+let qH=0,qM=0;
+function newQuiz(){
+  const t=Q_TIMES[Math.floor(Math.random()*Q_TIMES.length)];qH=t.h;qM=t.m;
+  document.getElementById('qFb').textContent='';drawClock('quizClock',qH,qM,80);
+  const ans=qH+':'+String(qM).padStart(2,'0');
+  const pool=new Set([ans]);
+  const others=Q_TIMES.map(x=>x.h+':'+String(x.m).padStart(2,'0')).filter(s=>s!==ans).sort(()=>Math.random()-.5);
+  while(pool.size<4&&others.length)pool.add(others.pop());
+  const opts=document.getElementById('qOpts');opts.innerHTML='';
+  [...pool].sort(()=>Math.random()-.5).forEach(s=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=s;
+    b.onclick=()=>{
+      document.querySelectorAll('#qOpts .opt').forEach(x=>x.onclick=null);const fb=document.getElementById('qFb');
+      if(s===ans){b.classList.add('correct');fb.textContent='🎉 Yes! It is '+ans+' — '+toWords(qH,qM)+'!';fb.style.color=var_blue;}
+      else{b.classList.add('wrong');fb.textContent='Look at the short blue hand for hours! Answer: '+ans;fb.style.color='#E03131';document.querySelectorAll('#qOpts .opt').forEach(x=>{if(x.textContent===ans)x.classList.add('correct');});}
+    };
+    opts.appendChild(b);
+  });
+}
+newQuiz();
+</script>
+</body>
+</html>
