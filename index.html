@@ -78,36 +78,83 @@ canvas{display:block;border-radius:10px}
 <div class="page">
 
 <div class="pnl on" id="p-learn">
+
+  <!-- MAIN CLOCK CARD -->
   <div class="card"><div class="cb"></div>
-    <div class="ct">Set the clock</div>
-    <div class="cs">Adjust hour and minute. The clock and words update live.</div>
-    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center;margin-bottom:14px">
-      <canvas id="clk" width="200" height="200" style="width:200px;height:200px"></canvas>
-      <div style="display:flex;flex-direction:column;gap:10px;min-width:140px">
-        <div class="cg" style="justify-content:center"><span class="cl" style="color:var(--ac)">Hour</span><button class="sb" style="background:var(--ac)" onclick="chT('h',-1)">−</button><span class="sv" style="color:var(--ac)" id="hVal">3</span><button class="sb" style="background:var(--ac)" onclick="chT('h',1)">+</button></div>
-        <div class="cg" style="justify-content:center"><span class="cl" style="color:var(--ac)">Min</span><button class="sb" style="background:var(--ac)" onclick="chT('m',-5)">−</button><span class="sv" style="color:var(--ac)" id="mVal">00</span><button class="sb" style="background:var(--ac)" onclick="chT('m',5)">+</button></div>
-        <div style="text-align:center;background:rgba(0,0,0,.02);border-radius:12px;padding:10px;border:1.5px solid rgba(0,0,0,.06)">
-          <div class="big" style="font-size:36px;color:var(--ac)" id="digi">3:00</div>
-          <div style="font-size:12px;font-weight:700;color:var(--ink2);margin-top:4px" id="twrd">three o'clock</div>
+    <div class="ct">Read and set the clock</div>
+    <div class="cs">Use the buttons to move the hands. Try o'clock, half past, quarter past, and quarter to.</div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:center">
+
+      <!-- Clock face -->
+      <canvas id="clk" width="220" height="220" style="width:220px;height:220px;flex-shrink:0"></canvas>
+
+      <!-- Controls + readout -->
+      <div style="display:flex;flex-direction:column;gap:12px;min-width:150px;flex:1">
+        <div class="cg" style="justify-content:space-between">
+          <span class="cl" style="color:var(--ac);min-width:44px">Hour</span>
+          <button class="sb" style="background:var(--ac)" onclick="chT('h',-1)">−</button>
+          <span class="sv" style="color:var(--ac);min-width:36px;text-align:center" id="hVal">3</span>
+          <button class="sb" style="background:var(--ac)" onclick="chT('h',1)">+</button>
+        </div>
+        <div class="cg" style="justify-content:space-between">
+          <span class="cl" style="color:var(--ac);min-width:44px">Min</span>
+          <button class="sb" style="background:var(--ac)" onclick="chT('m',-5)">−</button>
+          <span class="sv" style="color:var(--ac);min-width:36px;text-align:center" id="mVal">00</span>
+          <button class="sb" style="background:var(--ac)" onclick="chT('m',5)">+</button>
+        </div>
+
+        <!-- Quick-set buttons -->
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-top:2px">Jump to</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button onclick="setTime(12,0)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">12:00</button>
+          <button onclick="setTime(3,15)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">3:15</button>
+          <button onclick="setTime(6,30)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">6:30</button>
+          <button onclick="setTime(9,45)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">9:45</button>
+        </div>
+
+        <!-- Digital readout -->
+        <div style="text-align:center;background:rgba(0,0,0,.02);border-radius:12px;padding:12px;border:1.5px solid rgba(0,0,0,.06)">
+          <div class="big" style="font-size:40px;color:var(--ac)" id="digi">3:00</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink2);margin-top:4px" id="twrd">three o'clock</div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- CHALLENGE CARD -->
   <div class="card"><div class="cb"></div>
-    <div class="ct">What time do you do these?</div>
-    <div class="cs">Tap an activity to set the clock to that time.</div>
-    <div id="sched" style="display:flex;flex-direction:column;gap:6px"></div>
+    <div class="ct">Challenge!</div>
+    <div class="cs">Set the clock above to show the time below, then press Check.</div>
+
+    <div style="background:rgba(0,0,0,.02);border-radius:14px;padding:16px 20px;border:1.5px solid rgba(0,0,0,.06);margin-bottom:14px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:6px">Target time</div>
+      <div class="big" style="font-size:52px;color:var(--ac)" id="chalDisp">5:30</div>
+      <div style="font-size:16px;font-weight:700;color:var(--ink2);margin-top:4px" id="chalWrd">half past five</div>
+    </div>
+
+    <div class="row">
+      <button class="btn btn-p" onclick="ckChal()">Check ✓</button>
+      <button class="btn btn-g" onclick="nwChal()">New time ↻</button>
+    </div>
+    <div class="fb" id="chalFb" style="text-align:left;margin-top:10px"></div>
   </div>
+
 </div>
+
 <div class="pnl" id="p-practice">
   <div class="card"><div class="cb"></div>
-    <div class="ct">What time does the clock show?</div>
-    <div class="cs">Read the hour and minute hands carefully.</div>
-    <div style="display:flex;justify-content:center;margin-bottom:14px"><canvas id="qClk" width="200" height="200" style="width:200px;height:200px"></canvas></div>
-    <div class="opts" id="tO"></div><div class="fb" id="tF"></div>
+    <div class="ct">What time does this clock show?</div>
+    <div class="cs">Short hand = hour · Long hand = minutes.</div>
+    <div style="display:flex;justify-content:center;margin-bottom:14px">
+      <canvas id="qClk" width="200" height="200" style="width:200px;height:200px"></canvas>
+    </div>
+    <div class="opts" id="tO"></div>
+    <div class="fb" id="tF"></div>
     <button class="nbtn" onclick="nwTQ()">Next →</button>
   </div>
 </div>
+
 </div>
 <script>
 function sw(n){document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.textContent.toLowerCase()===n)});document.querySelectorAll('.pnl').forEach(function(p){var a=p.id==='p-'+n;p.classList.toggle('on',a);p.style.display=a?'flex':'none'})}
@@ -115,43 +162,153 @@ document.getElementById('p-practice').style.display='none';
 function pool4(ans,lo,hi){var s=new Set([ans]);var i=0;while(s.size<4&&i<50){i++;var w=ans+Math.round(Math.random()*8-4);if(w>=lo&&w<=hi&&w!==ans)s.add(w)}return[...s].sort(function(){return Math.random()-.5})}
 function mkOpts(cid,items,correct,fid){var c=document.getElementById(cid);c.innerHTML='';items.forEach(function(n){var b=document.createElement('button');b.className='opt';b.textContent=n;b.onclick=function(){c.querySelectorAll('.opt').forEach(function(x){x.onclick=null});var fb=document.getElementById(fid);if(String(n)===String(correct)){b.classList.add('ok');fb.textContent='🎉 Correct!';fb.style.color='var(--ok)'}else{b.classList.add('no');fb.textContent='The answer is '+correct+'.';fb.style.color='var(--no)';c.querySelectorAll('.opt').forEach(function(x){if(String(x.textContent)===String(correct))x.classList.add('ok')})}};c.appendChild(b)})}
 
-var cH=3,cM=0;
-function chT(w,d){if(w==='h'){cH+=d;if(cH>12)cH=1;if(cH<1)cH=12}else{cM+=d;if(cM>=60)cM=0;if(cM<0)cM=55}document.getElementById('hVal').textContent=cH;document.getElementById('mVal').textContent=cM<10?'0'+cM:cM;drwC('clk',cH,cM,100);upTxt()}
-function drwC(id,h,m,R){
-  var cvs=document.getElementById(id);if(!cvs)return;var ctx=cvs.getContext('2d');var cx=R,cy=R;
-  ctx.clearRect(0,0,R*2,R*2);
-  /* face */
-  ctx.beginPath();ctx.arc(cx,cy,R-4,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#E5E7EB';ctx.lineWidth=3;ctx.stroke();
-  /* hour markers */
-  for(var i=1;i<=12;i++){var a=(i*30-90)*Math.PI/180;var x1=cx+Math.cos(a)*(R-18);var y1=cy+Math.sin(a)*(R-18);var x2=cx+Math.cos(a)*(R-10);var y2=cy+Math.sin(a)*(R-10);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle='#9CA3AF';ctx.lineWidth=2;ctx.stroke();
-  var tx=cx+Math.cos(a)*(R-30);var ty=cy+Math.sin(a)*(R-30);ctx.font='bold 12px Grandstander,cursive';ctx.fillStyle='#1A2E2E';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(i,tx,ty)}
-  /* minute hand */
-  var mA=(m*6-90)*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(mA)*(R-18),cy+Math.sin(mA)*(R-18));ctx.strokeStyle='#2563EB';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();
-  /* hour hand */
-  var hA=((h%12)*30+m*0.5-90)*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(hA)*(R-38),cy+Math.sin(hA)*(R-38));ctx.strokeStyle='#1A2E2E';ctx.lineWidth=4;ctx.lineCap='round';ctx.stroke();
-  /* center dot */
-  ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fillStyle='#1A2E2E';ctx.fill();
+/* Single source of truth for the clock */
+var cH = 3, cM = 0;
+
+function setTime(h, m) {
+  cH = h; cM = m;
+  document.getElementById('hVal').textContent = cH;
+  document.getElementById('mVal').textContent = cM < 10 ? '0' + cM : cM;
+  drwC('clk', cH, cM, 110);
+  upTxt();
+  document.getElementById('chalFb').textContent = '';
 }
-var W1n=['twelve','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
-function tWords(h,m){var hn=W1n[h>12?h-12:h];if(m===0)return hn+" o'clock";if(m===15)return'quarter past '+hn;if(m===30)return'half past '+hn;if(m===45)return'quarter to '+W1n[(h%12)+1];return hn+':'+((m<10?'0':'')+m)}
-function upTxt(){document.getElementById('digi').textContent=cH+':'+(cM<10?'0':'')+cM;document.getElementById('twrd').textContent=tWords(cH,cM)}
-drwC('clk',cH,cM,100);upTxt();
-/* Schedule */
-var ACTS=[{e:'🌅',n:'Wake up',h:7,m:0},{e:'📚',n:'School',h:8,m:30},{e:'🍱',n:'Lunch',h:12,m:30},{e:'⚽',n:'Play',h:4,m:0},{e:'🍽️',n:'Dinner',h:7,m:30},{e:'🌙',n:'Bedtime',h:9,m:0}];
-function bldSch(){var el=document.getElementById('sched');el.innerHTML='';ACTS.forEach(function(a){
-var d=document.createElement('div');d.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(0,0,0,.02);border-radius:12px;border:1.5px solid rgba(0,0,0,.06);cursor:pointer;transition:.15s;user-select:none';
-d.onmouseenter=function(){d.style.borderColor='var(--ac)'};d.onmouseleave=function(){d.style.borderColor='rgba(0,0,0,.06)'};
-d.innerHTML='<span style="font-size:24px">'+a.e+'</span><span style="font-size:13px;font-weight:700;flex:1">'+a.n+'</span><span style="font-size:13px;font-weight:800;color:var(--ac)">'+a.h+':'+(a.m<10?'0':'')+a.m+'</span>';
-d.onclick=function(){cH=a.h;cM=a.m;document.getElementById('hVal').textContent=cH;document.getElementById('mVal').textContent=cM<10?'0'+cM:cM;drwC('clk',cH,cM,100);upTxt()};
-el.appendChild(d)})}
-bldSch();
-/* Quiz */
-var tAns='';
-function nwTQ(){var h=Math.floor(Math.random()*12)+1;var mins=[0,15,30,45,0,0,30];var m=mins[Math.floor(Math.random()*mins.length)];tAns=h+':'+(m<10?'0':'')+m;
-document.getElementById('tF').textContent='';drwC('qClk',h,m,100);
-var pool=[tAns];while(pool.length<4){var rh=Math.floor(Math.random()*12)+1;var rm=mins[Math.floor(Math.random()*mins.length)];var s=rh+':'+(rm<10?'0':'')+rm;if(pool.indexOf(s)===-1)pool.push(s)}
-pool.sort(function(){return Math.random()-.5});
-var c=document.getElementById('tO');c.innerHTML='';pool.forEach(function(t){var b=document.createElement('button');b.className='opt';b.style.fontSize='16px';b.textContent=t;b.onclick=function(){c.querySelectorAll('.opt').forEach(function(x){x.onclick=null});var fb=document.getElementById('tF');if(t===tAns){b.classList.add('ok');fb.textContent='🎉 Correct!';fb.style.color='var(--ok)'}else{b.classList.add('no');fb.textContent='It shows '+tAns+'.';fb.style.color='var(--no)';c.querySelectorAll('.opt').forEach(function(x){if(x.textContent===tAns)x.classList.add('ok')})}};c.appendChild(b)})}
+
+function chT(w, d) {
+  if (w === 'h') { cH += d; if (cH > 12) cH = 1; if (cH < 1) cH = 12; }
+  else { cM += d; if (cM >= 60) cM = 0; if (cM < 0) cM = 55; }
+  setTime(cH, cM);
+}
+
+function drwC(id, h, m, R) {
+  var cvs = document.getElementById(id); if (!cvs) return;
+  var ctx = cvs.getContext('2d'); var cx = R, cy = R;
+  ctx.clearRect(0, 0, R * 2, R * 2);
+
+  /* outer ring */
+  ctx.beginPath(); ctx.arc(cx, cy, R - 2, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.strokeStyle = '#CBD5E1'; ctx.lineWidth = 4; ctx.stroke();
+
+  /* hour ticks + numbers */
+  for (var i = 1; i <= 12; i++) {
+    var ang = (i * 30 - 90) * Math.PI / 180;
+    var big5 = i % 3 === 0;
+    /* tick */
+    var r1 = R - (big5 ? 18 : 12), r2 = R - 6;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(ang) * r1, cy + Math.sin(ang) * r1);
+    ctx.lineTo(cx + Math.cos(ang) * r2, cy + Math.sin(ang) * r2);
+    ctx.strokeStyle = big5 ? '#374151' : '#9CA3AF';
+    ctx.lineWidth = big5 ? 2.5 : 1.5; ctx.stroke();
+    /* number */
+    if (big5 || R > 90) {
+      var nr = R - (big5 ? 32 : 26);
+      ctx.font = 'bold ' + (R > 90 ? (big5 ? 13 : 10) : 10) + 'px Grandstander,cursive';
+      ctx.fillStyle = big5 ? '#1F2937' : '#6B7280';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(i, cx + Math.cos(ang) * nr, cy + Math.sin(ang) * nr);
+    }
+  }
+
+  /* minute hand — blue, thin, long */
+  var mAng = (m * 6 - 90) * Math.PI / 180;
+  ctx.save(); ctx.beginPath();
+  ctx.moveTo(cx - Math.cos(mAng) * 8, cy - Math.sin(mAng) * 8);
+  ctx.lineTo(cx + Math.cos(mAng) * (R - 18), cy + Math.sin(mAng) * (R - 18));
+  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = R > 90 ? 3 : 2.5; ctx.lineCap = 'round'; ctx.stroke(); ctx.restore();
+
+  /* hour hand — dark, thick, short */
+  var hAng = ((h % 12) * 30 + m * 0.5 - 90) * Math.PI / 180;
+  ctx.save(); ctx.beginPath();
+  ctx.moveTo(cx - Math.cos(hAng) * 6, cy - Math.sin(hAng) * 6);
+  ctx.lineTo(cx + Math.cos(hAng) * (R - 38), cy + Math.sin(hAng) * (R - 38));
+  ctx.strokeStyle = '#111827'; ctx.lineWidth = R > 90 ? 5 : 4; ctx.lineCap = 'round'; ctx.stroke(); ctx.restore();
+
+  /* centre dot */
+  ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+  ctx.fillStyle = '#111827'; ctx.fill();
+}
+
+var W1 = ['twelve','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
+function tWords(h, m) {
+  var hn = W1[h > 12 ? h - 12 : h];
+  if (m === 0)  return hn + " o'clock";
+  if (m === 15) return 'quarter past ' + hn;
+  if (m === 30) return 'half past ' + hn;
+  if (m === 45) return 'quarter to ' + W1[(h % 12) + 1];
+  return hn + ':' + (m < 10 ? '0' : '') + m;
+}
+
+function upTxt() {
+  document.getElementById('digi').textContent = cH + ':' + (cM < 10 ? '0' : '') + cM;
+  document.getElementById('twrd').textContent = tWords(cH, cM);
+}
+
+/* initialise */
+drwC('clk', cH, cM, 110);
+upTxt();
+
+/* ── Challenge ── */
+var chalH = 5, chalM = 30;
+
+function nwChal() {
+  var pool = [0, 15, 30, 45, 0, 0, 30];
+  chalH = Math.floor(Math.random() * 12) + 1;
+  chalM = pool[Math.floor(Math.random() * pool.length)];
+  document.getElementById('chalDisp').textContent = chalH + ':' + (chalM < 10 ? '0' : '') + chalM;
+  document.getElementById('chalWrd').textContent = tWords(chalH, chalM);
+  document.getElementById('chalFb').textContent = '';
+}
+
+function ckChal() {
+  var fb = document.getElementById('chalFb');
+  /* read directly from the live variables — no comparison drift */
+  if (cH === chalH && cM === chalM) {
+    fb.textContent = '🎉 Correct! ' + chalH + ':' + (chalM < 10 ? '0' : '') + chalM + ' — ' + tWords(chalH, chalM);
+    fb.style.color = 'var(--ok)';
+  } else {
+    var shown = cH + ':' + (cM < 10 ? '0' : '') + cM;
+    var need  = chalH + ':' + (chalM < 10 ? '0' : '') + chalM;
+    fb.textContent = 'Your clock shows ' + shown + ', but we need ' + need + '. Keep adjusting!';
+    fb.style.color = 'var(--no)';
+  }
+}
+
+nwChal();
+
+/* ── Practice quiz ── */
+var tAns = '';
+function nwTQ() {
+  var pool = [0, 15, 30, 45, 0, 0, 30];
+  var h = Math.floor(Math.random() * 12) + 1;
+  var m = pool[Math.floor(Math.random() * pool.length)];
+  tAns = h + ':' + (m < 10 ? '0' : '') + m;
+  document.getElementById('tF').textContent = '';
+  drwC('qClk', h, m, 100);
+  var opts = [tAns];
+  var tries = 0;
+  while (opts.length < 4 && tries < 50) {
+    tries++;
+    var rh = Math.floor(Math.random() * 12) + 1;
+    var rm = pool[Math.floor(Math.random() * pool.length)];
+    var s = rh + ':' + (rm < 10 ? '0' : '') + rm;
+    if (opts.indexOf(s) === -1) opts.push(s);
+  }
+  opts.sort(function() { return Math.random() - 0.5; });
+  var c = document.getElementById('tO'); c.innerHTML = '';
+  opts.forEach(function(t) {
+    var b = document.createElement('button'); b.className = 'opt'; b.style.fontSize = '15px'; b.textContent = t;
+    b.onclick = function() {
+      c.querySelectorAll('.opt').forEach(function(x) { x.onclick = null; });
+      var fb = document.getElementById('tF');
+      if (t === tAns) { b.classList.add('ok'); fb.textContent = '🎉 ' + tAns + ' — ' + tWords(h, m); fb.style.color = 'var(--ok)'; }
+      else { b.classList.add('no'); fb.textContent = 'It shows ' + tAns + '.'; fb.style.color = 'var(--no)';
+        c.querySelectorAll('.opt').forEach(function(x) { if (x.textContent === tAns) x.classList.add('ok'); }); }
+    };
+    c.appendChild(b);
+  });
+}
 nwTQ();
 
 </script>
