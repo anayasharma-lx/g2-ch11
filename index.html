@@ -23,22 +23,14 @@ html,body{width:100%;min-height:100vh;font-family:'Poppins',sans-serif;backgroun
 .cb{position:absolute;top:0;left:0;bottom:0;width:5px;border-radius:var(--r) 0 0 var(--r);background:var(--ac)}
 .ct{font-family:'Grandstander',cursive;font-size:15px;font-weight:800;padding-left:14px;margin-bottom:3px;line-height:1.3}
 .cs{font-size:12px;color:var(--ink2);padding-left:14px;margin-bottom:14px;line-height:1.6}
-/* stepper */
 .cr{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
 .cg{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.03);border-radius:12px;padding:8px 12px;border:1.5px solid rgba(0,0,0,.06)}
 .cl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;min-width:48px}
 .sb{width:34px;height:34px;border-radius:50%;border:none;font-size:18px;font-weight:900;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s;box-shadow:0 2px 6px rgba(0,0,0,.15)}
 .sb:active{transform:scale(.88)}
 .sv{font-family:'Grandstander',cursive;font-size:28px;font-weight:900;min-width:28px;text-align:center}
-/* blocks */
-.bx{background:rgba(0,0,0,.02);border-radius:14px;border:1.5px solid rgba(0,0,0,.06);padding:12px;min-height:60px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-bottom:14px}
-.flat{display:grid;grid-template-columns:repeat(10,8px);gap:1px}.flat-c{width:8px;height:8px;border-radius:1px;opacity:.8}
-.rod{display:flex;flex-direction:column;gap:1px}.rod-c{width:10px;height:10px;border-radius:1px;opacity:.8}
-.units{display:flex;flex-wrap:wrap;gap:2px;max-width:58px;align-self:flex-end}.unit-c{width:10px;height:10px;border-radius:2px;opacity:.8}
-.sep{width:1px;background:#D1D5DB;align-self:stretch;margin:0 3px}
-/* options */
 .opts{display:flex;gap:8px;flex-wrap:wrap}
-.opt{font-family:'Grandstander',cursive;font-size:22px;font-weight:800;min-width:72px;height:54px;border-radius:16px;border:2.5px solid rgba(0,0,0,.08);background:#fff;cursor:pointer;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.opt{font-family:'Grandstander',cursive;font-size:16px;font-weight:800;min-width:72px;height:54px;border-radius:16px;border:2.5px solid rgba(0,0,0,.08);background:#fff;cursor:pointer;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,.05);padding:0 10px}
 .opt:hover{border-color:var(--ac);transform:translateY(-2px)}
 .opt.ok{background:#DCFCE7;border-color:var(--ok);color:#15803D;animation:pop .3s}
 .opt.no{background:#FEE2E2;border-color:var(--no);color:var(--no);animation:shk .35s}
@@ -55,15 +47,10 @@ html,body{width:100%;min-height:100vh;font-family:'Poppins',sans-serif;backgroun
 .chal{background:rgba(0,0,0,.02);border-radius:16px;padding:14px;border:1.5px dashed rgba(0,0,0,.1);margin-top:10px}
 .chal-q{font-family:'Grandstander',cursive;font-size:14px;font-weight:800;margin-bottom:10px}
 .chal-q b{color:var(--ac);font-size:22px}
-canvas{display:block;border-radius:10px}
-/* drag & tap shared */
-.tappable{cursor:pointer;user-select:none;transition:transform .15s}
-.tappable:hover{transform:scale(1.08)}
-.tappable:active{transform:scale(.92)}
-/* misc */
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .pill{display:inline-block;font-family:'Grandstander',cursive;font-size:14px;font-weight:800;padding:6px 18px;border-radius:30px}
 .big{font-family:'Grandstander',cursive;font-weight:900;line-height:1;text-align:center}
+canvas{display:block;border-radius:10px}
 </style>
 </head>
 <body>
@@ -79,17 +66,13 @@ canvas{display:block;border-radius:10px}
 
 <div class="pnl on" id="p-learn">
 
-  <!-- MAIN CLOCK CARD -->
   <div class="card"><div class="cb"></div>
     <div class="ct">Read and set the clock</div>
-    <div class="cs">Use the buttons to move the hands. Try o'clock, half past, quarter past, and quarter to.</div>
+    <!-- CHANGED: only o'clock and half past -->
+    <div class="cs">Use the buttons to move the hands. Try o'clock (e.g. 3 o'clock) and half past (e.g. half past 6).</div>
 
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:center">
-
-      <!-- Clock face -->
       <canvas id="clk" width="220" height="220" style="width:220px;height:220px;flex-shrink:0"></canvas>
-
-      <!-- Controls + readout -->
       <div style="display:flex;flex-direction:column;gap:12px;min-width:150px;flex:1">
         <div class="cg" style="justify-content:space-between">
           <span class="cl" style="color:var(--ac);min-width:44px">Hour</span>
@@ -97,23 +80,23 @@ canvas{display:block;border-radius:10px}
           <span class="sv" style="color:var(--ac);min-width:36px;text-align:center" id="hVal">3</span>
           <button class="sb" style="background:var(--ac)" onclick="chT('h',1)">+</button>
         </div>
+        <!-- CHANGED: minute steps limited to 0 and 30 only (o'clock / half past) -->
         <div class="cg" style="justify-content:space-between">
           <span class="cl" style="color:var(--ac);min-width:44px">Min</span>
-          <button class="sb" style="background:var(--ac)" onclick="chT('m',-5)">−</button>
+          <button class="sb" style="background:var(--ac)" onclick="chT('m',-30)">−</button>
           <span class="sv" style="color:var(--ac);min-width:36px;text-align:center" id="mVal">00</span>
-          <button class="sb" style="background:var(--ac)" onclick="chT('m',5)">+</button>
+          <button class="sb" style="background:var(--ac)" onclick="chT('m',30)">+</button>
         </div>
 
-        <!-- Quick-set buttons -->
         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-top:2px">Jump to</div>
         <div style="display:flex;gap:5px;flex-wrap:wrap">
-          <button onclick="setTime(12,0)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">12:00</button>
-          <button onclick="setTime(3,15)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">3:15</button>
-          <button onclick="setTime(6,30)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">6:30</button>
-          <button onclick="setTime(9,45)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">9:45</button>
+          <!-- CHANGED: quick-set buttons only for o'clock and half past -->
+          <button onclick="setTime(1,0)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">1:00</button>
+          <button onclick="setTime(6,0)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">6:00</button>
+          <button onclick="setTime(3,30)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">3:30</button>
+          <button onclick="setTime(9,30)" style="font-family:Grandstander,cursive;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;transition:.12s;color:var(--ink2)">9:30</button>
         </div>
 
-        <!-- Digital readout -->
         <div style="text-align:center;background:rgba(0,0,0,.02);border-radius:12px;padding:12px;border:1.5px solid rgba(0,0,0,.06)">
           <div class="big" style="font-size:40px;color:var(--ac)" id="digi">3:00</div>
           <div style="font-size:13px;font-weight:700;color:var(--ink2);margin-top:4px" id="twrd">three o'clock</div>
@@ -122,10 +105,10 @@ canvas{display:block;border-radius:10px}
     </div>
   </div>
 
-  <!-- CHALLENGE CARD -->
+  <!-- CHANGED: activity instruction updated -->
   <div class="card"><div class="cb"></div>
     <div class="ct">Challenge!</div>
-    <div class="cs">Set the clock above to show the time below, then press Check.</div>
+    <div class="cs">Move the hands to show the time below. Then check.</div>
 
     <div style="background:rgba(0,0,0,.02);border-radius:14px;padding:16px 20px;border:1.5px solid rgba(0,0,0,.06);margin-bottom:14px">
       <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:6px">Target time</div>
@@ -145,7 +128,8 @@ canvas{display:block;border-radius:10px}
 <div class="pnl" id="p-practice">
   <div class="card"><div class="cb"></div>
     <div class="ct">What time does this clock show?</div>
-    <div class="cs">Short hand = hour · Long hand = minutes.</div>
+    <!-- CHANGED: practice only covers exact hour and half past -->
+    <div class="cs">Short hand = hour · Long hand = minutes. All times are o'clock or half past.</div>
     <div style="display:flex;justify-content:center;margin-bottom:14px">
       <canvas id="qClk" width="200" height="200" style="width:200px;height:200px"></canvas>
     </div>
@@ -159,158 +143,134 @@ canvas{display:block;border-radius:10px}
 <script>
 function sw(n){document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.textContent.toLowerCase()===n)});document.querySelectorAll('.pnl').forEach(function(p){var a=p.id==='p-'+n;p.classList.toggle('on',a);p.style.display=a?'flex':'none'})}
 document.getElementById('p-practice').style.display='none';
-function pool4(ans,lo,hi){var s=new Set([ans]);var i=0;while(s.size<4&&i<50){i++;var w=ans+Math.round(Math.random()*8-4);if(w>=lo&&w<=hi&&w!==ans)s.add(w)}return[...s].sort(function(){return Math.random()-.5})}
-function mkOpts(cid,items,correct,fid){var c=document.getElementById(cid);c.innerHTML='';items.forEach(function(n){var b=document.createElement('button');b.className='opt';b.textContent=n;b.onclick=function(){c.querySelectorAll('.opt').forEach(function(x){x.onclick=null});var fb=document.getElementById(fid);if(String(n)===String(correct)){b.classList.add('ok');fb.textContent='🎉 Correct!';fb.style.color='var(--ok)'}else{b.classList.add('no');fb.textContent='The answer is '+correct+'.';fb.style.color='var(--no)';c.querySelectorAll('.opt').forEach(function(x){if(String(x.textContent)===String(correct))x.classList.add('ok')})}};c.appendChild(b)})}
 
-/* Single source of truth for the clock */
-var cH = 3, cM = 0;
+var cH=3,cM=0;
 
-function setTime(h, m) {
-  cH = h; cM = m;
-  document.getElementById('hVal').textContent = cH;
-  document.getElementById('mVal').textContent = cM < 10 ? '0' + cM : cM;
-  drwC('clk', cH, cM, 110);
-  upTxt();
-  document.getElementById('chalFb').textContent = '';
+function setTime(h,m){
+  cH=h;cM=m;
+  document.getElementById('hVal').textContent=cH;
+  document.getElementById('mVal').textContent=cM<10?'0'+cM:cM;
+  drwC('clk',cH,cM,110);upTxt();
+  document.getElementById('chalFb').textContent='';
 }
 
-function chT(w, d) {
-  if (w === 'h') { cH += d; if (cH > 12) cH = 1; if (cH < 1) cH = 12; }
-  else { cM += d; if (cM >= 60) cM = 0; if (cM < 0) cM = 55; }
-  setTime(cH, cM);
+/* CHANGED: hour cycles 1–12; minute snaps between 0 and 30 only */
+function chT(w,d){
+  if(w==='h'){cH+=d;if(cH>12)cH=1;if(cH<1)cH=12;}
+  else{cM+=d;if(cM>=60)cM=0;if(cM<0)cM=30;}
+  setTime(cH,cM);
 }
 
-function drwC(id, h, m, R) {
-  var cvs = document.getElementById(id); if (!cvs) return;
-  var ctx = cvs.getContext('2d'); var cx = R, cy = R;
-  ctx.clearRect(0, 0, R * 2, R * 2);
-
-  /* outer ring */
-  ctx.beginPath(); ctx.arc(cx, cy, R - 2, 0, Math.PI * 2);
-  ctx.fillStyle = '#fff'; ctx.fill();
-  ctx.strokeStyle = '#CBD5E1'; ctx.lineWidth = 4; ctx.stroke();
-
-  /* hour ticks + numbers */
-  for (var i = 1; i <= 12; i++) {
-    var ang = (i * 30 - 90) * Math.PI / 180;
-    var big5 = i % 3 === 0;
-    /* tick */
-    var r1 = R - (big5 ? 18 : 12), r2 = R - 6;
+function drwC(id,h,m,R){
+  var cvs=document.getElementById(id);if(!cvs)return;
+  var ctx=cvs.getContext('2d');var cx=R,cy=R;
+  ctx.clearRect(0,0,R*2,R*2);
+  ctx.beginPath();ctx.arc(cx,cy,R-2,0,Math.PI*2);
+  ctx.fillStyle='#fff';ctx.fill();
+  ctx.strokeStyle='#CBD5E1';ctx.lineWidth=4;ctx.stroke();
+  for(var i=1;i<=12;i++){
+    var ang=(i*30-90)*Math.PI/180;
+    var big5=i%3===0;
+    var r1=R-(big5?18:12),r2=R-6;
     ctx.beginPath();
-    ctx.moveTo(cx + Math.cos(ang) * r1, cy + Math.sin(ang) * r1);
-    ctx.lineTo(cx + Math.cos(ang) * r2, cy + Math.sin(ang) * r2);
-    ctx.strokeStyle = big5 ? '#374151' : '#9CA3AF';
-    ctx.lineWidth = big5 ? 2.5 : 1.5; ctx.stroke();
-    /* number */
-    if (big5 || R > 90) {
-      var nr = R - (big5 ? 32 : 26);
-      ctx.font = 'bold ' + (R > 90 ? (big5 ? 13 : 10) : 10) + 'px Grandstander,cursive';
-      ctx.fillStyle = big5 ? '#1F2937' : '#6B7280';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(i, cx + Math.cos(ang) * nr, cy + Math.sin(ang) * nr);
+    ctx.moveTo(cx+Math.cos(ang)*r1,cy+Math.sin(ang)*r1);
+    ctx.lineTo(cx+Math.cos(ang)*r2,cy+Math.sin(ang)*r2);
+    ctx.strokeStyle=big5?'#374151':'#9CA3AF';
+    ctx.lineWidth=big5?2.5:1.5;ctx.stroke();
+    if(big5||R>90){
+      var nr=R-(big5?32:26);
+      ctx.font='bold '+(R>90?(big5?13:10):10)+'px Grandstander,cursive';
+      ctx.fillStyle=big5?'#1F2937':'#6B7280';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(i,cx+Math.cos(ang)*nr,cy+Math.sin(ang)*nr);
     }
   }
-
-  /* minute hand — blue, thin, long */
-  var mAng = (m * 6 - 90) * Math.PI / 180;
-  ctx.save(); ctx.beginPath();
-  ctx.moveTo(cx - Math.cos(mAng) * 8, cy - Math.sin(mAng) * 8);
-  ctx.lineTo(cx + Math.cos(mAng) * (R - 18), cy + Math.sin(mAng) * (R - 18));
-  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = R > 90 ? 3 : 2.5; ctx.lineCap = 'round'; ctx.stroke(); ctx.restore();
-
-  /* hour hand — dark, thick, short */
-  var hAng = ((h % 12) * 30 + m * 0.5 - 90) * Math.PI / 180;
-  ctx.save(); ctx.beginPath();
-  ctx.moveTo(cx - Math.cos(hAng) * 6, cy - Math.sin(hAng) * 6);
-  ctx.lineTo(cx + Math.cos(hAng) * (R - 38), cy + Math.sin(hAng) * (R - 38));
-  ctx.strokeStyle = '#111827'; ctx.lineWidth = R > 90 ? 5 : 4; ctx.lineCap = 'round'; ctx.stroke(); ctx.restore();
-
-  /* centre dot */
-  ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-  ctx.fillStyle = '#111827'; ctx.fill();
+  var mAng=(m*6-90)*Math.PI/180;
+  ctx.save();ctx.beginPath();
+  ctx.moveTo(cx-Math.cos(mAng)*8,cy-Math.sin(mAng)*8);
+  ctx.lineTo(cx+Math.cos(mAng)*(R-18),cy+Math.sin(mAng)*(R-18));
+  ctx.strokeStyle='#2563EB';ctx.lineWidth=R>90?3:2.5;ctx.lineCap='round';ctx.stroke();ctx.restore();
+  var hAng=((h%12)*30+m*0.5-90)*Math.PI/180;
+  ctx.save();ctx.beginPath();
+  ctx.moveTo(cx-Math.cos(hAng)*6,cy-Math.sin(hAng)*6);
+  ctx.lineTo(cx+Math.cos(hAng)*(R-38),cy+Math.sin(hAng)*(R-38));
+  ctx.strokeStyle='#111827';ctx.lineWidth=R>90?5:4;ctx.lineCap='round';ctx.stroke();ctx.restore();
+  ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fillStyle='#111827';ctx.fill();
 }
 
-var W1 = ['twelve','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
-function tWords(h, m) {
-  var hn = W1[h > 12 ? h - 12 : h];
-  if (m === 0)  return hn + " o'clock";
-  if (m === 15) return 'quarter past ' + hn;
-  if (m === 30) return 'half past ' + hn;
-  if (m === 45) return 'quarter to ' + W1[(h % 12) + 1];
-  return hn + ':' + (m < 10 ? '0' : '') + m;
+var W1=['twelve','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
+/* CHANGED: only o'clock and half past */
+function tWords(h,m){
+  var hn=W1[h>12?h-12:h];
+  if(m===0)return hn+" o'clock";
+  if(m===30)return 'half past '+hn;
+  return hn+':'+(m<10?'0':'')+m;
 }
 
-function upTxt() {
-  document.getElementById('digi').textContent = cH + ':' + (cM < 10 ? '0' : '') + cM;
-  document.getElementById('twrd').textContent = tWords(cH, cM);
+function upTxt(){
+  document.getElementById('digi').textContent=cH+':'+(cM<10?'0':'')+cM;
+  document.getElementById('twrd').textContent=tWords(cH,cM);
 }
 
-/* initialise */
-drwC('clk', cH, cM, 110);
-upTxt();
+drwC('clk',cH,cM,110);upTxt();
 
-/* ── Challenge ── */
-var chalH = 5, chalM = 30;
+var chalH=5,chalM=30;
 
-function nwChal() {
-  var pool = [0, 15, 30, 45, 0, 0, 30];
-  chalH = Math.floor(Math.random() * 12) + 1;
-  chalM = pool[Math.floor(Math.random() * pool.length)];
-  document.getElementById('chalDisp').textContent = chalH + ':' + (chalM < 10 ? '0' : '') + chalM;
-  document.getElementById('chalWrd').textContent = tWords(chalH, chalM);
-  document.getElementById('chalFb').textContent = '';
+function nwChal(){
+  /* CHANGED: only o'clock (min=0) and half past (min=30) */
+  chalH=Math.floor(Math.random()*12)+1;
+  chalM=Math.random()<0.5?0:30;
+  document.getElementById('chalDisp').textContent=chalH+':'+(chalM<10?'0':'')+chalM;
+  document.getElementById('chalWrd').textContent=tWords(chalH,chalM);
+  document.getElementById('chalFb').textContent='';
 }
 
-function ckChal() {
-  var fb = document.getElementById('chalFb');
-  /* read directly from the live variables — no comparison drift */
-  if (cH === chalH && cM === chalM) {
-    fb.textContent = '🎉 Correct! ' + chalH + ':' + (chalM < 10 ? '0' : '') + chalM + ' — ' + tWords(chalH, chalM);
-    fb.style.color = 'var(--ok)';
+function ckChal(){
+  var fb=document.getElementById('chalFb');
+  if(cH===chalH&&cM===chalM){
+    fb.textContent='🎉 Correct! '+chalH+':'+(chalM<10?'0':'')+chalM+' — '+tWords(chalH,chalM);
+    fb.style.color='var(--ok)';
   } else {
-    var shown = cH + ':' + (cM < 10 ? '0' : '') + cM;
-    var need  = chalH + ':' + (chalM < 10 ? '0' : '') + chalM;
-    fb.textContent = 'Your clock shows ' + shown + ', but we need ' + need + '. Keep adjusting!';
-    fb.style.color = 'var(--no)';
+    var shown=cH+':'+(cM<10?'0':'')+cM;
+    var need=chalH+':'+(chalM<10?'0':'')+chalM;
+    fb.textContent='Your clock shows '+shown+', but we need '+need+'. Keep adjusting!';
+    fb.style.color='var(--no)';
   }
 }
-
 nwChal();
 
-/* ── Practice quiz ── */
-var tAns = '';
-function nwTQ() {
-  var pool = [0, 15, 30, 45, 0, 0, 30];
-  var h = Math.floor(Math.random() * 12) + 1;
-  var m = pool[Math.floor(Math.random() * pool.length)];
-  tAns = h + ':' + (m < 10 ? '0' : '') + m;
-  document.getElementById('tF').textContent = '';
-  drwC('qClk', h, m, 100);
-  var opts = [tAns];
-  var tries = 0;
-  while (opts.length < 4 && tries < 50) {
+/* CHANGED: practice quiz — only o'clock and half past */
+var tAns='';
+function nwTQ(){
+  var h=Math.floor(Math.random()*12)+1;
+  var m=Math.random()<0.5?0:30;
+  tAns=h+':'+(m<10?'0':'')+m;
+  document.getElementById('tF').textContent='';
+  drwC('qClk',h,m,100);
+  /* generate 4 distinct options all being o'clock or half past */
+  var pool=[tAns];var tries=0;
+  while(pool.length<4&&tries<50){
     tries++;
-    var rh = Math.floor(Math.random() * 12) + 1;
-    var rm = pool[Math.floor(Math.random() * pool.length)];
-    var s = rh + ':' + (rm < 10 ? '0' : '') + rm;
-    if (opts.indexOf(s) === -1) opts.push(s);
+    var rh=Math.floor(Math.random()*12)+1;
+    var rm=Math.random()<0.5?0:30;
+    var s=rh+':'+(rm<10?'0':'')+rm;
+    if(pool.indexOf(s)===-1)pool.push(s);
   }
-  opts.sort(function() { return Math.random() - 0.5; });
-  var c = document.getElementById('tO'); c.innerHTML = '';
-  opts.forEach(function(t) {
-    var b = document.createElement('button'); b.className = 'opt'; b.style.fontSize = '15px'; b.textContent = t;
-    b.onclick = function() {
-      c.querySelectorAll('.opt').forEach(function(x) { x.onclick = null; });
-      var fb = document.getElementById('tF');
-      if (t === tAns) { b.classList.add('ok'); fb.textContent = '🎉 ' + tAns + ' — ' + tWords(h, m); fb.style.color = 'var(--ok)'; }
-      else { b.classList.add('no'); fb.textContent = 'It shows ' + tAns + '.'; fb.style.color = 'var(--no)';
-        c.querySelectorAll('.opt').forEach(function(x) { if (x.textContent === tAns) x.classList.add('ok'); }); }
+  pool.sort(function(){return Math.random()-0.5});
+  var c=document.getElementById('tO');c.innerHTML='';
+  pool.forEach(function(t){
+    var b=document.createElement('button');b.className='opt';b.style.fontSize='15px';b.textContent=t;
+    b.onclick=function(){
+      c.querySelectorAll('.opt').forEach(function(x){x.onclick=null});
+      var fb=document.getElementById('tF');
+      if(t===tAns){b.classList.add('ok');fb.textContent='🎉 '+tAns+' — '+tWords(h,m);fb.style.color='var(--ok)';}
+      else{b.classList.add('no');fb.textContent='It shows '+tAns+'.';fb.style.color='var(--no)';
+        c.querySelectorAll('.opt').forEach(function(x){if(x.textContent===tAns)x.classList.add('ok')});}
     };
     c.appendChild(b);
   });
 }
 nwTQ();
-
 </script>
 </body>
 </html>
